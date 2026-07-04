@@ -52,9 +52,11 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-ink-50 px-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center flex flex-col items-center">
-          <img src="/logo.png" alt="Sree Vaaraahii Building Solutions" className="h-28 w-auto object-contain mb-3" />
-          <h1 className="text-base font-semibold text-ink-900">Sree Vaaraahii Building Solutions</h1>
-          <p className="text-xs text-ink-500">Sales & Profit Management</p>
+          <div className="mb-4 flex h-24 w-24 items-center justify-center rounded-2xl bg-white p-3 shadow-sm ring-1 ring-ink-100/50">
+            <img src="/logo.png" alt="Sree Vaaraahii Building Solutions" className="max-h-full max-w-full object-contain mix-blend-multiply" />
+          </div>
+          <h1 className="text-base font-bold text-ink-900 tracking-tight">Sree Vaaraahii Building Solutions</h1>
+          <p className="text-xs text-ink-500 mt-0.5">Sales & Profit Management</p>
         </div>
         <form onSubmit={handleSubmit} className="card space-y-4 p-6">
           <div>
