@@ -37,12 +37,15 @@ export default async function AnalyticsPrintPage({
       <PrintTrigger />
 
       {/* Report Header */}
-      <div className="border-b-2 border-ink-900 pb-4 text-center">
-        <h1 className="text-2xl font-bold uppercase tracking-wide">{business.name}</h1>
-        <p className="text-sm text-ink-600 mt-1">Business Analytics Summary Report</p>
-        <p className="text-xs font-semibold text-ink-700 mt-2 bg-ink-100/50 py-1 px-3 rounded w-fit mx-auto">
-          Period: {formatDate(from)} to {formatDate(to)}
-        </p>
+      <div className="flex items-center gap-4 border-b-2 border-ink-900 pb-4 text-left">
+        <img src="/logo.png" alt="Logo" className="h-16 w-auto object-contain shrink-0" />
+        <div>
+          <h1 className="text-lg font-bold uppercase tracking-wide">Sree Vaaraahii Building Solutions</h1>
+          <p className="text-sm text-ink-600">Business Analytics Summary Report</p>
+          <p className="text-xs font-semibold text-ink-700 mt-1">
+            Period: {formatDate(from)} to {formatDate(to)}
+          </p>
+        </div>
       </div>
 
       {/* KPI Financial Summary block */}

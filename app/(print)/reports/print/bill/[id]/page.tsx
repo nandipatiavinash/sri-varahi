@@ -22,10 +22,13 @@ export default async function PrintBillPage({ params }: { params: Promise<{ id: 
   return (
     <div>
       <div className="mb-6 flex items-start justify-between border-b border-ink-200 pb-4 no-print:border-b">
-        <div>
-          <h1 className="text-lg font-bold">{business.name}</h1>
-          {business.address && <p className="text-sm text-ink-600">{business.address}</p>}
-          {business.phone && <p className="text-sm text-ink-600">Ph: {business.phone}</p>}
+        <div className="flex items-center gap-3.5">
+          <img src="/logo.png" alt="Logo" className="h-16 w-auto object-contain shrink-0" />
+          <div>
+            <h1 className="text-base font-bold">Sree Vaaraahii Building Solutions</h1>
+            {business.address && <p className="text-xs text-ink-600">{business.address}</p>}
+            {business.phone && <p className="text-xs text-ink-600">Ph: {business.phone}</p>}
+          </div>
         </div>
         <div className="text-right">
           <h2 className="text-base font-semibold">INVOICE</h2>

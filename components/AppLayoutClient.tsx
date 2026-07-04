@@ -43,13 +43,11 @@ export function AppLayoutClient({
             >
               <Menu size={20} />
             </button>
-            <span className="font-semibold text-ink-900 text-sm truncate max-w-[200px]">
-              {businessName}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-500 text-xs font-bold text-white">
-              SV
+            <div className="flex items-center gap-2">
+              <img src="/logo.png" alt="Logo" className="h-6 w-auto object-contain shrink-0" />
+              <span className="font-semibold text-ink-900 text-sm truncate max-w-[160px]">
+                Sree Vaaraahii
+              </span>
             </div>
           </div>
         </div>

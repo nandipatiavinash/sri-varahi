@@ -25,9 +25,12 @@ export default async function PrintDailyReportPage({
 
   return (
     <div>
-      <div className="mb-6 border-b border-ink-300 pb-3">
-        <h1 className="text-lg font-bold">{business.name}</h1>
-        <p className="text-sm text-ink-600">Daily EOD Report — {formatDate(day)}</p>
+      <div className="mb-6 flex items-center gap-3.5 border-b border-ink-300 pb-3.5">
+        <img src="/logo.png" alt="Logo" className="h-14 w-auto object-contain shrink-0" />
+        <div>
+          <h1 className="text-base font-bold">Sree Vaaraahii Building Solutions</h1>
+          <p className="text-xs text-ink-600">Daily EOD Report — {formatDate(day)}</p>
+        </div>
       </div>
 
       <table className="mb-4 w-full text-sm">

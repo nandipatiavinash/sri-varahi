@@ -50,13 +50,11 @@ export function Sidebar({
     >
       {/* Sidebar Header */}
       <div className="flex items-center justify-between px-4 py-5 border-b border-ink-50 lg:border-none">
-        <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-500 text-sm font-bold text-white">
-            SV
-          </div>
+        <div className="flex items-center gap-2.5">
+          <img src="/logo.png" alt="Logo" className="h-9 w-auto object-contain shrink-0" />
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-ink-900">{businessName}</p>
-            <p className="text-xs text-ink-500">Sales & Profit</p>
+            <p className="truncate text-xs font-bold text-ink-900 uppercase tracking-wide">Sree Vaaraahii</p>
+            <p className="text-[10px] text-ink-500">Building Solutions</p>
           </div>
         </div>
         
