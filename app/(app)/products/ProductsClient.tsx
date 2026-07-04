@@ -9,6 +9,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { formatCurrency } from '@/lib/utils/format';
 import { createProduct, updateProduct, setProductStatus } from '@/actions/products';
 import { PRODUCT_CATEGORIES, type ProductFormValues } from '@/lib/validations/product';
+import { triggerSuccessModal } from '@/components/ui/SuccessModal';
 
 interface ProductRow {
   id: string;
@@ -121,7 +122,7 @@ function ProductModal({
     const result = product ? await updateProduct(product.id, form) : await createProduct(form);
     setSaving(false);
     if (!result.ok) return toast.error(result.error);
-    toast.success(product ? 'Product updated' : 'Product created');
+    triggerSuccessModal(product ? 'Product Updated Successfully!' : 'Product Created Successfully!');
     onSaved();
     onClose();
   }

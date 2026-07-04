@@ -51,6 +51,7 @@ export function Sidebar({ businessName }: { businessName: string }) {
             <Link
               key={href}
               href={href}
+              prefetch={true}
               className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                 active ? 'bg-brand-50 text-brand-700' : 'text-ink-600 hover:bg-ink-50'
               }`}

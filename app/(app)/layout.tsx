@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Sidebar } from '@/components/Sidebar';
+import { SuccessModal } from '@/components/ui/SuccessModal';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -22,6 +23,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <main className="flex-1 overflow-y-auto bg-ink-50">
         <div className="mx-auto max-w-7xl p-6 lg:p-8">{children}</div>
       </main>
+      <SuccessModal />
     </div>
   );
 }

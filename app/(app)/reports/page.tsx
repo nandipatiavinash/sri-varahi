@@ -17,7 +17,7 @@ export default function ReportsPage() {
         <PageHeader title="Reports" description="Screen view with a print-optimized A4 layout for each." />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {REPORTS.map(({ href, label, description, icon: Icon }) => (
-            <Link key={href} href={href} className="card flex items-start gap-4 p-5 hover:border-brand-300">
+            <Link key={href} href={href} prefetch={true} className="card flex items-start gap-4 p-5 hover:border-brand-300">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
                 <Icon size={18} />
               </div>

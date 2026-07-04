@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { Download, FileSpreadsheet } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { getExportData } from '@/actions/export';
+import { triggerSuccessModal } from '@/components/ui/SuccessModal';
 
 export function ExcelExporter() {
   const today = new Date().toISOString().slice(0, 10);
@@ -63,7 +64,7 @@ export function ExcelExporter() {
 
       // Trigger download
       XLSX.writeFile(wb, `sri_varahi_data_${from}_to_${to}.xlsx`);
-      toast.success('Excel file downloaded successfully');
+      triggerSuccessModal('Excel Export Complete! Check your downloads folder.');
     } catch (error: any) {
       setDownloading(false);
       toast.error(error.message || 'An error occurred during export');

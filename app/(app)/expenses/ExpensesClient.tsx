@@ -9,6 +9,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { formatCurrency, formatDate, todayISO } from '@/lib/utils/format';
 import { createExpense, updateExpense, deleteExpense } from '@/actions/expenses';
 import { EXPENSE_CATEGORIES, type ExpenseFormValues } from '@/lib/validations/expense';
+import { triggerSuccessModal } from '@/components/ui/SuccessModal';
 
 interface ExpenseRow {
   id: string;
@@ -30,7 +31,7 @@ export function ExpensesClient({ initialExpenses }: { initialExpenses: ExpenseRo
     const result = await deleteExpense(id);
     if (!result.ok) return toast.error(result.error);
     setExpenses((prev) => prev.filter((e) => e.id !== id));
-    toast.success('Expense deleted');
+    triggerSuccessModal('Expense Deleted Successfully!');
   }
 
   const columns: ColumnDef<ExpenseRow>[] = [
@@ -98,7 +99,7 @@ function ExpenseModal({
     const result = expense ? await updateExpense(expense.id, form) : await createExpense(form);
     setSaving(false);
     if (!result.ok) return toast.error(result.error);
-    toast.success(expense ? 'Expense updated' : 'Expense recorded');
+    triggerSuccessModal(expense ? 'Expense Updated Successfully!' : 'Expense Recorded Successfully!');
     onSaved();
     onClose();
   }

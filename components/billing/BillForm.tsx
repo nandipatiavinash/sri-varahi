@@ -12,6 +12,7 @@ import { convertAdvanceOrderToBill } from '@/actions/advance-orders';
 import { LineItemEditor, type ProductOption } from './LineItemEditor';
 import { PaymentSplitEditor } from './PaymentSplitEditor';
 import { formatCurrency } from '@/lib/utils/format';
+import { triggerSuccessModal } from '@/components/ui/SuccessModal';
 
 export interface EmployeeOption {
   id: string;
@@ -90,7 +91,7 @@ export function BillForm({
       }
     }
 
-    toast.success(mode === 'create' ? 'Bill created' : 'Bill updated');
+    triggerSuccessModal(mode === 'create' ? 'Bill Created Successfully!' : 'Bill Updated Successfully!');
     router.push(`/sales/${result.data!.id}`);
     router.refresh();
   }

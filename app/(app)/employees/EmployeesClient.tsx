@@ -16,6 +16,7 @@ import {
   getEmployeeBillsForCurrentMonth,
 } from '@/actions/employees';
 import type { EmployeeFormValues } from '@/lib/validations/employee';
+import { triggerSuccessModal } from '@/components/ui/SuccessModal';
 
 interface EmployeeRow {
   id: string;
@@ -130,7 +131,7 @@ function EmployeeModal({
     const result = employee ? await updateEmployee(employee.id, form) : await createEmployee(form);
     setSaving(false);
     if (!result.ok) return toast.error(result.error);
-    toast.success(employee ? 'Employee updated' : 'Employee added');
+    triggerSuccessModal(employee ? 'Employee Updated Successfully!' : 'Employee Added Successfully!');
     onSaved();
     onClose();
   }

@@ -10,6 +10,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { formatCurrency, formatDate } from '@/lib/utils/format';
 import { recordCreditPayment } from '@/actions/credit-payments';
+import { triggerSuccessModal } from '@/components/ui/SuccessModal';
 
 interface CreditBillRow {
   id: string;
@@ -127,7 +128,7 @@ function RecordPaymentModal({
     const result = await recordCreditPayment({ billId: bill.id, amount, method, notes });
     setSaving(false);
     if (!result.ok) return toast.error(result.error);
-    toast.success('Payment recorded');
+    triggerSuccessModal('Payment Recorded Successfully!');
     onSaved();
     onClose();
   }

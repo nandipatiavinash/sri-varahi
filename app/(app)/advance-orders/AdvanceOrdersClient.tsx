@@ -10,6 +10,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { formatCurrency, formatDate, todayISO } from '@/lib/utils/format';
 import { createAdvanceOrder, updateAdvanceOrder, cancelAdvanceOrder } from '@/actions/advance-orders';
 import type { AdvanceOrderFormValues } from '@/lib/validations/advance-order';
+import { triggerSuccessModal } from '@/components/ui/SuccessModal';
 
 interface AdvanceOrderRow {
   id: string;
@@ -34,7 +35,7 @@ export function AdvanceOrdersClient({ initialOrders }: { initialOrders: AdvanceO
     const result = await cancelAdvanceOrder(id);
     if (!result.ok) return toast.error(result.error);
     setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status: 'cancelled' } : o)));
-    toast.success('Order cancelled');
+    triggerSuccessModal('Advance Order Cancelled Successfully!');
   }
 
   const columns: ColumnDef<AdvanceOrderRow>[] = [
@@ -132,7 +133,7 @@ function AdvanceOrderModal({
     const result = order ? await updateAdvanceOrder(order.id, form) : await createAdvanceOrder(form);
     setSaving(false);
     if (!result.ok) return toast.error(result.error);
-    toast.success(order ? 'Order updated' : 'Advance order created');
+    triggerSuccessModal(order ? 'Order Updated Successfully!' : 'Advance Order Created Successfully!');
     onSaved();
     onClose();
   }
