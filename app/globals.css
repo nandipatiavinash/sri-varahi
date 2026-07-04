@@ -82,3 +82,12 @@ body {
 .animate-bounceOnce {
   animation: bounceOnce 0.5s ease-out 1;
 }
+
+@keyframes progressBar {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-progressBar {
+  animation: progressBar 1.5s infinite linear;
+}
