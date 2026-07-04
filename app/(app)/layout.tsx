@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { Sidebar } from '@/components/Sidebar';
+import { AppLayoutClient } from '@/components/AppLayoutClient';
 import { SuccessModal } from '@/components/ui/SuccessModal';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -17,13 +17,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     .eq('owner_id', user.id)
     .single();
 
+  const businessName = business?.name ?? 'Sri Varahi Building Solutions';
+
   return (
-    <div className="flex min-h-screen">
-      <Sidebar businessName={business?.name ?? 'Sri Varahi Building Solutions'} />
-      <main className="flex-1 overflow-y-auto bg-ink-50">
-        <div className="mx-auto max-w-7xl p-6 lg:p-8">{children}</div>
-      </main>
-      <SuccessModal />
-    </div>
+    <AppLayoutClient businessName={businessName}>
+      {children}
+    </AppLayoutClient>
   );
 }

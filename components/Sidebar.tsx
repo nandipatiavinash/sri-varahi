@@ -14,6 +14,7 @@ import {
   Settings,
   Search,
   LogOut,
+  X,
 } from 'lucide-react';
 import { signOut } from '@/actions/auth';
 
@@ -25,26 +26,52 @@ const NAV = [
   { href: '/expenses', label: 'Expenses', icon: Wallet },
   { href: '/products', label: 'Products', icon: PackageSearch },
   { href: '/employees', label: 'Employees', icon: Users },
-  { href: '/reports', label: 'Reports', icon: BarChart3 },
+  { href: '/analytics', label: 'Analytics', icon: BarChart3 },
   { href: '/search', label: 'Search', icon: Search },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
 
-export function Sidebar({ businessName }: { businessName: string }) {
+export function Sidebar({
+  businessName,
+  isOpen,
+  onClose,
+}: {
+  businessName: string;
+  isOpen: boolean;
+  onClose: () => void;
+}) {
   const pathname = usePathname();
 
   return (
-    <aside className="no-print flex h-screen w-64 flex-col border-r border-ink-100 bg-white">
-      <div className="flex items-center gap-2 px-4 py-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-500 text-sm font-bold text-white">
-          SV
+    <aside
+      className={`no-print fixed inset-y-0 left-0 z-50 flex h-screen w-64 flex-col border-r border-ink-100 bg-white transition-transform duration-300 lg:static lg:translate-x-0 ${
+        isOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}
+    >
+      {/* Sidebar Header */}
+      <div className="flex items-center justify-between px-4 py-5 border-b border-ink-50 lg:border-none">
+        <div className="flex items-center gap-2">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-500 text-sm font-bold text-white">
+            SV
+          </div>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-ink-900">{businessName}</p>
+            <p className="text-xs text-ink-500">Sales & Profit</p>
+          </div>
         </div>
-        <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-ink-900">{businessName}</p>
-          <p className="text-xs text-ink-500">Sales & Profit</p>
-        </div>
+        
+        {/* Mobile Close Button */}
+        <button
+          onClick={onClose}
+          className="rounded-lg p-1 text-ink-500 hover:bg-ink-100 lg:hidden"
+          aria-label="Close Sidebar"
+        >
+          <X size={18} />
+        </button>
       </div>
-      <nav className="flex-1 space-y-0.5 px-2">
+
+      {/* Navigation List */}
+      <nav className="flex-1 space-y-0.5 px-2 py-4">
         {NAV.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(href + '/');
           return (
@@ -52,6 +79,7 @@ export function Sidebar({ businessName }: { businessName: string }) {
               key={href}
               href={href}
               prefetch={true}
+              onClick={onClose}
               className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                 active ? 'bg-brand-50 text-brand-700' : 'text-ink-600 hover:bg-ink-50'
               }`}
@@ -62,6 +90,8 @@ export function Sidebar({ businessName }: { businessName: string }) {
           );
         })}
       </nav>
+
+      {/* Sign Out Action */}
       <form action={signOut} className="border-t border-ink-100 p-2">
         <button type="submit" className="btn-ghost w-full justify-start">
           <LogOut size={17} />

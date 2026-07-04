@@ -42,7 +42,15 @@ export default async function EmployeePerformancePage() {
                 <td className="px-4 py-2.5">
                   {i === 0 ? <Trophy size={15} className="inline text-amber-500" /> : `#${i + 1}`}
                 </td>
-                <td className="px-4 py-2.5 font-medium">{r.employee_name}</td>
+                <td className="px-4 py-2.5">
+                  <Link
+                    href={`/employees/${r.employee_id}`}
+                    prefetch={true}
+                    className="font-medium text-brand-600 hover:underline"
+                  >
+                    {r.employee_name}
+                  </Link>
+                </td>
                 <td className="px-4 py-2.5 text-right">{r.bill_count}</td>
                 <td className="px-4 py-2.5 text-right">{formatCurrency(r.total_sales)}</td>
                 <td className="px-4 py-2.5 text-right text-green-700">{formatCurrency(r.total_profit)}</td>

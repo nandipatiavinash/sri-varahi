@@ -49,7 +49,8 @@ export async function createBill(input: BillFormValues): Promise<ActionResult<{ 
       quantity: i.quantity,
       purchasePrice: i.purchasePrice,
       sellingPrice: i.sellingPrice,
-    }))
+    })),
+    data.discount
   );
   const paidAmount = computeTotalPaid(data.paymentSplits);
   const status = deriveBillStatus(data.grandTotal, paidAmount);
@@ -172,7 +173,7 @@ export async function updateBill(
   }
 
   const subtotal = computeSubtotal(data.items);
-  const grossProfit = computeGrossProfit(data.items);
+  const grossProfit = computeGrossProfit(data.items, data.discount);
   const paidAmount = computeTotalPaid(data.paymentSplits);
   const status = deriveBillStatus(data.grandTotal, paidAmount);
 

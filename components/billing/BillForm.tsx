@@ -62,7 +62,7 @@ export function BillForm({
   const grandTotal = watch('grandTotal');
 
   const subtotal = computeSubtotal(items);
-  const grossProfit = computeGrossProfit(items);
+  const grossProfit = computeGrossProfit(items, discount || 0);
 
   // Auto-calculate grand total when subtotal or discount changes
   useEffect(() => {

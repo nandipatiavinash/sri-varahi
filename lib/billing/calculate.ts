@@ -30,8 +30,9 @@ export function computeSubtotal(items: LineItemInput[]): number {
   return round2(items.reduce((sum, i) => sum + lineTotal(i), 0));
 }
 
-export function computeGrossProfit(items: LineItemInput[]): number {
-  return round2(items.reduce((sum, i) => sum + lineProfit(i), 0));
+export function computeGrossProfit(items: LineItemInput[], discount: number = 0): number {
+  const itemsProfit = items.reduce((sum, i) => sum + lineProfit(i), 0);
+  return round2(itemsProfit - discount);
 }
 
 /**

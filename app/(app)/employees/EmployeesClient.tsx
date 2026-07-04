@@ -47,13 +47,13 @@ export function EmployeesClient({ initialEmployees }: { initialEmployees: Employ
       accessorKey: 'name',
       header: 'Name',
       cell: ({ row }) => (
-        <button
-          type="button"
-          onClick={() => setViewingBillsEmployee(row.original)}
+        <Link
+          href={`/employees/${row.original.id}`}
+          prefetch={true}
           className="font-medium text-brand-500 hover:text-brand-600 hover:underline text-left"
         >
           {row.original.name}
-        </button>
+        </Link>
       ),
     },
     { accessorKey: 'mobile', header: 'Mobile', cell: ({ row }) => row.original.mobile || '—' },
