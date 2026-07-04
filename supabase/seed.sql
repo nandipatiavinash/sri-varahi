@@ -2,11 +2,11 @@
 -- already created one auth user (owner). Replace the owner_id below with
 -- that user's UUID (Supabase Studio > Authentication > Users).
 
--- \set owner_id 'PASTE-AUTH-USER-UUID-HERE'
+-- \set owner_id 'a112a7b5-ddd5-4b09-83e3-7fae479cf110'
 
 insert into businesses (owner_id, name, address, phone, email, currency)
 values (
-  'PASTE-AUTH-USER-UUID-HERE',
+  'a112a7b5-ddd5-4b09-83e3-7fae479cf110',
   'Sri Varahi Building Solutions',
   'Main Road, Andhra Pradesh',
   '9876543210',
