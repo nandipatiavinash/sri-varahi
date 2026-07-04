@@ -142,7 +142,14 @@ function RecordPaymentModal({
         <div className="space-y-3">
           <div>
             <label className="label">Amount ₹</label>
-            <input type="number" className="input" value={amount} onChange={(e) => setAmount(Number(e.target.value))} />
+            <input
+              type="number"
+              step="1"
+              className="input"
+              value={amount}
+              onChange={(e) => setAmount(Number(e.target.value))}
+              onFocus={(e) => e.target.select()}
+            />
           </div>
           <div>
             <label className="label">Method</label>

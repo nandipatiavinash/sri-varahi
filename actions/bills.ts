@@ -8,6 +8,7 @@ import {
   computeGrossProfit,
   computeTotalPaid,
   validatePaymentSplits,
+  deriveBillStatus,
 } from '@/lib/billing/calculate';
 import { checkBillEditWindow } from '@/lib/edit-window';
 
@@ -51,6 +52,7 @@ export async function createBill(input: BillFormValues): Promise<ActionResult<{ 
     }))
   );
   const paidAmount = computeTotalPaid(data.paymentSplits);
+  const status = deriveBillStatus(data.grandTotal, paidAmount);
 
   const { data: bill, error: billError } = await supabase
     .from('bills')
@@ -66,6 +68,7 @@ export async function createBill(input: BillFormValues): Promise<ActionResult<{ 
       grand_total: data.grandTotal,
       gross_profit: grossProfit,
       paid_amount: paidAmount,
+      status,
       notes: data.notes || null,
     })
     .select('id')
@@ -172,6 +175,7 @@ export async function updateBill(
   const subtotal = computeSubtotal(data.items);
   const grossProfit = computeGrossProfit(data.items);
   const paidAmount = computeTotalPaid(data.paymentSplits);
+  const status = deriveBillStatus(data.grandTotal, paidAmount);
 
   const { error: billError } = await supabase
     .from('bills')
@@ -186,6 +190,7 @@ export async function updateBill(
       grand_total: data.grandTotal,
       gross_profit: grossProfit,
       paid_amount: paidAmount,
+      status,
       notes: data.notes || null,
     })
     .eq('id', billId);

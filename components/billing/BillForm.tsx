@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -62,6 +62,11 @@ export function BillForm({
 
   const subtotal = computeSubtotal(items);
   const grossProfit = computeGrossProfit(items);
+
+  // Auto-calculate grand total when subtotal or discount changes
+  useEffect(() => {
+    setValue('grandTotal', suggestGrandTotal(subtotal, discount || 0));
+  }, [subtotal, discount, setValue]);
 
   function applySuggestedTotal() {
     setValue('grandTotal', suggestGrandTotal(subtotal, discount || 0));
@@ -132,11 +137,12 @@ export function BillForm({
           <label className="label">Discount ₹</label>
           <input
             type="number"
-            step="0.01"
+            step="1"
             min="0"
             className="input"
             value={discount}
             onChange={(e) => setValue('discount', Number(e.target.value))}
+            onFocus={(e) => e.target.select()}
           />
         </div>
         <div className="sm:col-span-2 lg:col-span-2">
@@ -165,11 +171,12 @@ export function BillForm({
           </label>
           <input
             type="number"
-            step="0.01"
+            step="1"
             min="0"
             className="input font-semibold"
             value={grandTotal}
             onChange={(e) => setValue('grandTotal', Number(e.target.value))}
+            onFocus={(e) => e.target.select()}
           />
         </div>
       </div>

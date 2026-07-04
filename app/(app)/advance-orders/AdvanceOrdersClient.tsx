@@ -154,9 +154,11 @@ function AdvanceOrderModal({
             <label className="label">Advance Amount ₹</label>
             <input
               type="number"
+              step="1"
               className="input"
               value={form.advanceAmount}
               onChange={(e) => setForm({ ...form, advanceAmount: Number(e.target.value) })}
+              onFocus={(e) => e.target.select()}
             />
           </div>
           <div>

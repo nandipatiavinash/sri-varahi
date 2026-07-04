@@ -122,7 +122,14 @@ function ExpenseModal({
           </div>
           <div>
             <label className="label">Amount ₹</label>
-            <input type="number" className="input" value={form.amount} onChange={(e) => setForm({ ...form, amount: Number(e.target.value) })} />
+            <input
+              type="number"
+              step="1"
+              className="input"
+              value={form.amount}
+              onChange={(e) => setForm({ ...form, amount: Number(e.target.value) })}
+              onFocus={(e) => e.target.select()}
+            />
           </div>
           <div>
             <label className="label">Description</label>

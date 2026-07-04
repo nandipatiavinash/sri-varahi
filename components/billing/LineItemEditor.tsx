@@ -103,31 +103,34 @@ export function LineItemEditor({
                 <td className="px-3 py-2">
                   <input
                     type="number"
-                    step="0.01"
-                    min="0.01"
+                    step="1"
+                    min="1"
                     className="input"
                     value={item.quantity}
                     onChange={(e) => updateItem(index, { quantity: Number(e.target.value) })}
+                    onFocus={(e) => e.target.select()}
                   />
                 </td>
                 <td className="px-3 py-2">
                   <input
                     type="number"
-                    step="0.01"
+                    step="1"
                     min="0"
                     className="input"
                     value={item.purchasePrice}
                     onChange={(e) => updateItem(index, { purchasePrice: Number(e.target.value) })}
+                    onFocus={(e) => e.target.select()}
                   />
                 </td>
                 <td className="px-3 py-2">
                   <input
                     type="number"
-                    step="0.01"
+                    step="1"
                     min="0"
                     className="input"
                     value={item.sellingPrice}
                     onChange={(e) => updateItem(index, { sellingPrice: Number(e.target.value) })}
+                    onFocus={(e) => e.target.select()}
                   />
                 </td>
                 <td className="px-3 py-2 text-right font-medium">

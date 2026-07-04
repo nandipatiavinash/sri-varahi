@@ -63,11 +63,12 @@ export function PaymentSplitEditor({
             </select>
             <input
               type="number"
-              step="0.01"
+              step="1"
               min="0"
               className="input"
               value={split.amount}
               onChange={(e) => update(index, { amount: Number(e.target.value) })}
+              onFocus={(e) => e.target.select()}
             />
             <button
               type="button"

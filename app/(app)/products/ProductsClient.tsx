@@ -152,18 +152,22 @@ function ProductModal({
               <label className="label">Purchase Price ₹</label>
               <input
                 type="number"
+                step="1"
                 className="input"
                 value={form.defaultPurchasePrice}
                 onChange={(e) => setForm({ ...form, defaultPurchasePrice: Number(e.target.value) })}
+                onFocus={(e) => e.target.select()}
               />
             </div>
             <div>
               <label className="label">Selling Price ₹</label>
               <input
                 type="number"
+                step="1"
                 className="input"
                 value={form.defaultSellingPrice}
                 onChange={(e) => setForm({ ...form, defaultSellingPrice: Number(e.target.value) })}
+                onFocus={(e) => e.target.select()}
               />
             </div>
           </div>

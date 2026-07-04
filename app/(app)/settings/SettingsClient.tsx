@@ -88,11 +88,13 @@ export function SettingsClient({ initialSettings }: { initialSettings: SettingsF
             <label className="label">Extra grace hours past midnight</label>
             <input
               type="number"
+              step="1"
               min={0}
               max={24}
               className="input"
               value={form.editWindowHours}
               onChange={(e) => setForm({ ...form, editWindowHours: Number(e.target.value) })}
+              onFocus={(e) => e.target.select()}
             />
           </div>
           <div>
