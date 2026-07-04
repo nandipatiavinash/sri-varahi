@@ -56,3 +56,24 @@ export async function setEmployeeStatus(id: string, status: 'active' | 'inactive
   revalidatePath('/employees');
   return { ok: true, data: undefined };
 }
+
+export async function getEmployeeBillsForCurrentMonth(employeeId: string): Promise<ActionResult<any[]>> {
+  const supabase = await createClient();
+  const business = await getCurrentBusiness();
+
+  const today = new Date();
+  const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().slice(0, 10);
+  const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().slice(0, 10);
+
+  const { data: bills, error } = await supabase
+    .from('bills')
+    .select('id, bill_number, bill_date, customer_name, grand_total, status')
+    .eq('business_id', business.id)
+    .eq('employee_id', employeeId)
+    .gte('bill_date', startOfMonth)
+    .lte('bill_date', endOfMonth)
+    .order('bill_date', { ascending: false });
+
+  if (error) return { ok: false, error: error.message };
+  return { ok: true, data: bills ?? [] };
+}

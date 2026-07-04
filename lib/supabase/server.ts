@@ -1,11 +1,13 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
+import { cache } from 'react';
 import type { Database } from '@/types/database.types';
 
 // Server-side Supabase client for use in Server Components, Server Actions,
 // and Route Handlers. RLS (business_id -> owner_id = auth.uid()) is the real
 // security boundary here, not this wrapper.
-export async function createClient() {
+// Wrapped in React cache to deduplicate client creation per request lifecycle.
+export const createClient = cache(async () => {
   const cookieStore = await cookies();
 
   return createServerClient<Database>(
@@ -29,12 +31,13 @@ export async function createClient() {
       },
     }
   );
-}
+});
 
 // Returns the current signed-in user's business row (single-owner model).
 // Throws if there's no session or no business yet, since every protected
 // page/action assumes one exists.
-export async function getCurrentBusiness() {
+// Wrapped in React cache to deduplicate database queries per request lifecycle.
+export const getCurrentBusiness = cache(async () => {
   const supabase = await createClient();
   const {
     data: { user },
@@ -51,4 +54,4 @@ export async function getCurrentBusiness() {
   if (error || !business) throw new Error('No business found for this account');
 
   return business;
-}
+});
