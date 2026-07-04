@@ -448,7 +448,9 @@ function DateDetailsModal({
             </div>
             <div className="bg-ink-50/50 p-3 rounded-xl">
               <span className="text-xs text-ink-500">Gross Profit</span>
-              <p className="text-lg font-bold text-green-700 mt-0.5">{formatCurrency(totalProfit)}</p>
+              <p className={`text-lg font-bold mt-0.5 ${totalProfit >= 0 ? 'text-green-700' : 'text-red-600'}`}>
+                {formatCurrency(totalProfit)}
+              </p>
             </div>
             <div className="bg-ink-50/50 p-3 rounded-xl">
               <span className="text-xs text-ink-500">Invoices Generated</span>
@@ -489,7 +491,7 @@ function DateDetailsModal({
                       </td>
                       <td className="px-4 py-3 text-ink-600">{b.employee_name || '—'}</td>
                       <td className="px-4 py-3 text-right font-semibold">{formatCurrency(b.grand_total)}</td>
-                      <td className="px-4 py-3 text-right font-medium text-green-700">
+                      <td className={`px-4 py-3 text-right font-medium ${b.gross_profit >= 0 ? 'text-green-700' : 'text-red-600'}`}>
                         {b.status !== 'voided' ? formatCurrency(b.gross_profit) : '—'}
                       </td>
                       <td className="px-4 py-3 text-center">

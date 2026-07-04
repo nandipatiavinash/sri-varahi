@@ -126,7 +126,7 @@ export default async function DashboardPage({
           label={profitLabel}
           value={formatCurrency(totalProfit)}
           icon={TrendingUp}
-          tone="positive"
+          tone={totalProfit >= 0 ? 'positive' : 'negative'}
         />
         <StatCard
           label={range === 'today' ? "Today's Net Profit" : range === '7days' ? "Net Profit (7 Days)" : range === 'month' ? "Net Profit (This Month)" : "Net Profit (Custom Range)"}

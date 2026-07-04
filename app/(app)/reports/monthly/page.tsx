@@ -46,7 +46,7 @@ export default async function MonthlyReportPage() {
                 </td>
                 <td className="px-4 py-2.5 text-right">{m.bill_count}</td>
                 <td className="px-4 py-2.5 text-right">{formatCurrency(m.total_sales)}</td>
-                <td className="px-4 py-2.5 text-right text-green-700">{formatCurrency(m.total_profit)}</td>
+                <td className={`px-4 py-2.5 text-right ${m.total_profit >= 0 ? 'text-green-700' : 'text-red-600'}`}>{formatCurrency(m.total_profit)}</td>
                 <td className="px-4 py-2.5 text-right">{formatCurrency(m.total_collected)}</td>
                 <td className="px-4 py-2.5 text-right text-red-600">{formatCurrency(m.total_outstanding)}</td>
               </tr>

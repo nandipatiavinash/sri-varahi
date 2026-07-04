@@ -161,7 +161,9 @@ export function BillForm({
         </div>
         <div>
           <p className="text-xs font-medium text-ink-500">Gross Profit</p>
-          <p className="text-lg font-semibold text-green-700">{formatCurrency(grossProfit)}</p>
+          <p className={`text-lg font-semibold ${grossProfit >= 0 ? 'text-green-700' : 'text-red-600'}`}>
+            {formatCurrency(grossProfit)}
+          </p>
         </div>
         <div>
           <label className="label flex items-center justify-between">

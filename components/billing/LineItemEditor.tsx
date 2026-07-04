@@ -93,12 +93,14 @@ export function LineItemEditor({
                       <option key={p.id} value={p.id}>{p.name}</option>
                     ))}
                   </select>
-                  <input
-                    className="input"
-                    placeholder="Product name"
-                    value={item.productName}
-                    onChange={(e) => updateItem(index, { productName: e.target.value })}
-                  />
+                  {item.productId === null && (
+                    <input
+                      className="input mt-1"
+                      placeholder="Product name"
+                      value={item.productName}
+                      onChange={(e) => updateItem(index, { productName: e.target.value })}
+                    />
+                  )}
                 </td>
                 <td className="px-3 py-2">
                   <input
@@ -136,7 +138,7 @@ export function LineItemEditor({
                 <td className="px-3 py-2 text-right font-medium">
                   {formatCurrency(lineTotal({ quantity: item.quantity, purchasePrice: item.purchasePrice, sellingPrice: item.sellingPrice }))}
                 </td>
-                <td className="px-3 py-2 text-right text-green-700">
+                <td className={`px-3 py-2 text-right ${lineProfit({ quantity: item.quantity, purchasePrice: item.purchasePrice, sellingPrice: item.sellingPrice }) >= 0 ? 'text-green-700' : 'text-red-600'}`}>
                   {formatCurrency(lineProfit({ quantity: item.quantity, purchasePrice: item.purchasePrice, sellingPrice: item.sellingPrice }))}
                 </td>
                 <td className="px-3 py-2">

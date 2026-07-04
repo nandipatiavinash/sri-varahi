@@ -48,8 +48,8 @@ export default async function DailyReportPage({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-4"><p className="text-xs text-ink-500">Bills</p><p className="text-lg font-semibold">{summary?.bill_count ?? 0}</p></div>
         <div className="card p-4"><p className="text-xs text-ink-500">Total Sales</p><p className="text-lg font-semibold">{formatCurrency(summary?.total_sales)}</p></div>
-        <div className="card p-4"><p className="text-xs text-ink-500">Gross Profit</p><p className="text-lg font-semibold text-green-700">{formatCurrency(summary?.total_profit)}</p></div>
-        <div className="card p-4"><p className="text-xs text-ink-500">Net Profit (after expenses)</p><p className="text-lg font-semibold">{formatCurrency(Number(summary?.total_profit ?? 0) - expenseTotal)}</p></div>
+        <div className="card p-4"><p className="text-xs text-ink-500">Gross Profit</p><p className={`text-lg font-semibold ${(summary?.total_profit ?? 0) >= 0 ? 'text-green-700' : 'text-red-600'}`}>{formatCurrency(summary?.total_profit)}</p></div>
+        <div className="card p-4"><p className="text-xs text-ink-500">Net Profit (after expenses)</p><p className={`text-lg font-semibold ${(Number(summary?.total_profit ?? 0) - expenseTotal) >= 0 ? 'text-green-700' : 'text-red-600'}`}>{formatCurrency(Number(summary?.total_profit ?? 0) - expenseTotal)}</p></div>
       </div>
 
       <div className="card mt-5 overflow-hidden">
@@ -62,7 +62,7 @@ export default async function DailyReportPage({
                 <td className="px-4 py-2.5"><Link href={`/sales/${b.id}`} className="text-brand-700 hover:underline">{b.bill_number}</Link></td>
                 <td className="px-4 py-2.5">{b.customer_name}</td>
                 <td className="px-4 py-2.5 text-right">{formatCurrency(b.grand_total)}</td>
-                <td className="px-4 py-2.5 text-right text-green-700">{formatCurrency(b.gross_profit)}</td>
+                <td className={`px-4 py-2.5 text-right ${(b.gross_profit ?? 0) >= 0 ? 'text-green-700' : 'text-red-600'}`}>{formatCurrency(b.gross_profit)}</td>
                 <td className="px-4 py-2.5"><StatusBadge status={b.status} /></td>
               </tr>
             ))}

@@ -59,7 +59,9 @@ export default async function BillDetailPage({ params }: { params: Promise<{ id:
         </div>
         <div className="card p-4">
           <p className="text-xs text-ink-500">Gross Profit</p>
-          <p className="text-lg font-semibold text-green-700">{formatCurrency(bill.gross_profit)}</p>
+          <p className={`text-lg font-semibold ${bill.gross_profit >= 0 ? 'text-green-700' : 'text-red-600'}`}>
+            {formatCurrency(bill.gross_profit)}
+          </p>
         </div>
         <div className="card p-4">
           <p className="text-xs text-ink-500">Balance Due</p>
@@ -92,7 +94,9 @@ export default async function BillDetailPage({ params }: { params: Promise<{ id:
                 <td className="px-4 py-2.5">{formatCurrency(i.purchase_price)}</td>
                 <td className="px-4 py-2.5">{formatCurrency(i.selling_price)}</td>
                 <td className="px-4 py-2.5 text-right font-medium">{formatCurrency(i.line_total)}</td>
-                <td className="px-4 py-2.5 text-right text-green-700">{formatCurrency(i.line_profit)}</td>
+                <td className={`px-4 py-2.5 text-right ${i.line_profit >= 0 ? 'text-green-700' : 'text-red-600'}`}>
+                  {formatCurrency(i.line_profit)}
+                </td>
               </tr>
             ))}
           </tbody>

@@ -53,7 +53,7 @@ export default async function EmployeePerformancePage() {
                 </td>
                 <td className="px-4 py-2.5 text-right">{r.bill_count}</td>
                 <td className="px-4 py-2.5 text-right">{formatCurrency(r.total_sales)}</td>
-                <td className="px-4 py-2.5 text-right text-green-700">{formatCurrency(r.total_profit)}</td>
+                <td className={`px-4 py-2.5 text-right ${r.total_profit >= 0 ? 'text-green-700' : 'text-red-600'}`}>{formatCurrency(r.total_profit)}</td>
               </tr>
             ))}
             {(rows ?? []).length === 0 && (

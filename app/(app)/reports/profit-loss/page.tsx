@@ -67,7 +67,7 @@ export default async function ProfitLossPage({
         <table className="w-full text-sm">
           <tbody className="divide-y divide-ink-100">
             <tr><td className="py-2 font-medium">Total Sales</td><td className="py-2 text-right">{formatCurrency(totalSales)}</td></tr>
-            <tr><td className="py-2 font-medium">Gross Profit</td><td className="py-2 text-right text-green-700">{formatCurrency(totalGrossProfit)}</td></tr>
+            <tr><td className="py-2 font-medium">Gross Profit</td><td className={`py-2 text-right ${totalGrossProfit >= 0 ? 'text-green-700' : 'text-red-600'}`}>{formatCurrency(totalGrossProfit)}</td></tr>
             {Object.entries(expensesByCategory).map(([cat, amt]) => (
               <tr key={cat}><td className="py-2 pl-4 text-ink-600">Less: {cat}</td><td className="py-2 text-right text-red-600">-{formatCurrency(amt)}</td></tr>
             ))}
