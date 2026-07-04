@@ -24,7 +24,7 @@ export async function createEmployee(input: EmployeeFormValues): Promise<ActionR
     .single();
 
   if (error || !data) return { ok: false, error: error?.message ?? 'Failed to create employee' };
-  revalidatePath('/employees');
+  revalidatePath('/', 'layout');
   return { ok: true, data: { id: data.id } };
 }
 
@@ -43,7 +43,7 @@ export async function updateEmployee(id: string, input: EmployeeFormValues): Pro
     .eq('id', id);
 
   if (error) return { ok: false, error: error.message };
-  revalidatePath('/employees');
+  revalidatePath('/', 'layout');
   return { ok: true, data: undefined };
 }
 
@@ -53,7 +53,7 @@ export async function setEmployeeStatus(id: string, status: 'active' | 'inactive
   const supabase = await createClient();
   const { error } = await supabase.from('employees').update({ status }).eq('id', id);
   if (error) return { ok: false, error: error.message };
-  revalidatePath('/employees');
+  revalidatePath('/', 'layout');
   return { ok: true, data: undefined };
 }
 

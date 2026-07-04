@@ -29,7 +29,7 @@ export async function createAdvanceOrder(
     .single();
 
   if (error || !data) return { ok: false, error: error?.message ?? 'Failed to create advance order' };
-  revalidatePath('/advance-orders');
+  revalidatePath('/', 'layout');
   return { ok: true, data: { id: data.id } };
 }
 
@@ -54,7 +54,7 @@ export async function updateAdvanceOrder(
     .eq('id', id);
 
   if (error) return { ok: false, error: error.message };
-  revalidatePath('/advance-orders');
+  revalidatePath('/', 'layout');
   return { ok: true, data: undefined };
 }
 
@@ -65,7 +65,7 @@ export async function cancelAdvanceOrder(id: string): Promise<ActionResult> {
     .update({ status: 'cancelled' })
     .eq('id', id);
   if (error) return { ok: false, error: error.message };
-  revalidatePath('/advance-orders');
+  revalidatePath('/', 'layout');
   return { ok: true, data: undefined };
 }
 
@@ -98,7 +98,6 @@ export async function convertAdvanceOrderToBill(
 
   if (error) return { ok: false, error: error.message };
 
-  revalidatePath('/advance-orders');
-  revalidatePath('/sales');
+  revalidatePath('/', 'layout');
   return { ok: true, data: undefined };
 }

@@ -26,7 +26,7 @@ export async function createProduct(input: ProductFormValues): Promise<ActionRes
     .single();
 
   if (error || !data) return { ok: false, error: error?.message ?? 'Failed to create product' };
-  revalidatePath('/products');
+  revalidatePath('/', 'layout');
   return { ok: true, data: { id: data.id } };
 }
 
@@ -47,7 +47,7 @@ export async function updateProduct(id: string, input: ProductFormValues): Promi
     .eq('id', id);
 
   if (error) return { ok: false, error: error.message };
-  revalidatePath('/products');
+  revalidatePath('/', 'layout');
   return { ok: true, data: undefined };
 }
 
@@ -58,6 +58,6 @@ export async function setProductStatus(id: string, status: 'active' | 'inactive'
   const supabase = await createClient();
   const { error } = await supabase.from('products').update({ status }).eq('id', id);
   if (error) return { ok: false, error: error.message };
-  revalidatePath('/products');
+  revalidatePath('/', 'layout');
   return { ok: true, data: undefined };
 }

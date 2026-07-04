@@ -111,8 +111,7 @@ export async function createBill(input: BillFormValues): Promise<ActionResult<{ 
     detail: { bill_number: data.billNumber, grand_total: data.grandTotal },
   });
 
-  revalidatePath('/sales');
-  revalidatePath('/dashboard');
+  revalidatePath('/', 'layout');
   return { ok: true, data: { id: bill.id } };
 }
 
@@ -228,9 +227,7 @@ export async function updateBill(
     detail: { bill_number: data.billNumber, grand_total: data.grandTotal },
   });
 
-  revalidatePath('/sales');
-  revalidatePath(`/sales/${billId}`);
-  revalidatePath('/dashboard');
+  revalidatePath('/', 'layout');
   return { ok: true, data: { id: billId } };
 }
 
@@ -256,8 +253,7 @@ export async function deleteBill(billId: string): Promise<ActionResult> {
     detail: null,
   });
 
-  revalidatePath('/sales');
-  revalidatePath('/dashboard');
+  revalidatePath('/', 'layout');
   return { ok: true, data: undefined };
 }
 
@@ -293,9 +289,7 @@ export async function voidBill(billId: string): Promise<ActionResult> {
     detail: null,
   });
 
-  revalidatePath('/sales');
-  revalidatePath(`/sales/${billId}`);
-  revalidatePath('/dashboard');
+  revalidatePath('/', 'layout');
   return { ok: true, data: undefined };
 }
 

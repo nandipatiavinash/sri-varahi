@@ -25,8 +25,7 @@ export async function createExpense(input: ExpenseFormValues): Promise<ActionRes
     .single();
 
   if (error || !data) return { ok: false, error: error?.message ?? 'Failed to create expense' };
-  revalidatePath('/expenses');
-  revalidatePath('/dashboard');
+  revalidatePath('/', 'layout');
   return { ok: true, data: { id: data.id } };
 }
 
@@ -46,8 +45,7 @@ export async function updateExpense(id: string, input: ExpenseFormValues): Promi
     .eq('id', id);
 
   if (error) return { ok: false, error: error.message };
-  revalidatePath('/expenses');
-  revalidatePath('/dashboard');
+  revalidatePath('/', 'layout');
   return { ok: true, data: undefined };
 }
 
@@ -55,7 +53,6 @@ export async function deleteExpense(id: string): Promise<ActionResult> {
   const supabase = await createClient();
   const { error } = await supabase.from('expenses').delete().eq('id', id);
   if (error) return { ok: false, error: error.message };
-  revalidatePath('/expenses');
-  revalidatePath('/dashboard');
+  revalidatePath('/', 'layout');
   return { ok: true, data: undefined };
 }

@@ -57,8 +57,6 @@ export async function recordCreditPayment(input: {
     detail: { credit_payment: parsed.data.amount, method: parsed.data.method },
   });
 
-  revalidatePath('/credit-customers');
-  revalidatePath(`/sales/${parsed.data.billId}`);
-  revalidatePath('/dashboard');
+  revalidatePath('/', 'layout');
   return { ok: true, data: { id: payment.id } };
 }
