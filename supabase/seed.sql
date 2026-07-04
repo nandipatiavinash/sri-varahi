@@ -1,44 +1,66 @@
--- Demo seed data. Run after 0001_init.sql, against a project where you've
--- already created one auth user (owner). Replace the owner_id below with
--- that user's UUID (Supabase Studio > Authentication > Users).
+-- Demo seed data. Run after 0001_init.sql.
+-- This script uses chained CTEs to be 100% compatible with the Supabase SQL Editor UI.
 
--- \set owner_id 'a112a7b5-ddd5-4b09-83e3-7fae479cf110'
-
-insert into businesses (owner_id, name, address, phone, email, currency)
-values (
-  'a112a7b5-ddd5-4b09-83e3-7fae479cf110',
-  'Sri Varahi Building Solutions',
-  'Main Road, Andhra Pradesh',
-  '9876543210',
-  'contact@srivarahi.example',
-  'INR'
+WITH new_business AS (
+  INSERT INTO businesses (owner_id, name, address, phone, email, currency)
+  VALUES (
+    'a112a7b5-ddd5-4b09-83e3-7fae479cf110',
+    'Sri Varahi Building Solutions',
+    'Main Road, Andhra Pradesh',
+    '9876543210',
+    'contact@srivarahi.example',
+    'INR'
+  )
+  RETURNING id
+),
+new_employees AS (
+  INSERT INTO employees (business_id, name, mobile, status)
+  SELECT id, 'Ramesh Kumar', '9000011111', 'active' FROM new_business
+  UNION ALL
+  SELECT id, 'Suresh Babu', '9000022222', 'active' FROM new_business
+  UNION ALL
+  SELECT id, 'Lakshmi Priya', '9000033333', 'active' FROM new_business
+  RETURNING id, name
+),
+new_products AS (
+  INSERT INTO products (business_id, name, category, default_purchase_price, default_selling_price)
+  SELECT id, 'Asian Paints Tractor Emulsion 20L', 'Paints', 2200, 2650 FROM new_business
+  UNION ALL
+  SELECT id, 'TMT Steel Bar 12mm (Fe500)', 'Steel', 620, 690 FROM new_business
+  UNION ALL
+  SELECT id, 'UltraTech Cement 50kg', 'Cement', 335, 380 FROM new_business
+  UNION ALL
+  SELECT id, 'Vitrified Tile 2x2 ft (box)', 'Tiles', 850, 1050 FROM new_business
+  UNION ALL
+  SELECT id, 'CPVC Pipe 1 inch (3m)', 'Plumbing', 260, 320 FROM new_business
+  UNION ALL
+  SELECT id, 'Door Hinge Heavy Duty (pair)', 'Hardware', 90, 140 FROM new_business
+  RETURNING id, name
+),
+new_bill AS (
+  INSERT INTO bills (business_id, bill_number, bill_date, customer_name, customer_mobile, employee_id, grand_total, notes)
+  SELECT 
+    nb.id, 
+    'SV-1001', 
+    CURRENT_DATE, 
+    'Venkata Rao', 
+    '9123456780', 
+    (SELECT id FROM new_employees WHERE name = 'Ramesh Kumar' LIMIT 1), 
+    0, 
+    'Cash sale'
+  FROM new_business nb
+  RETURNING id
+),
+new_bill_item AS (
+  INSERT INTO bill_items (bill_id, product_id, product_name_snapshot, quantity, purchase_price, selling_price)
+  SELECT 
+    new_bill.id, 
+    (SELECT id FROM new_products WHERE name = 'UltraTech Cement 50kg' LIMIT 1), 
+    'UltraTech Cement 50kg', 
+    20, 
+    335, 
+    380
+  FROM new_bill
 )
-returning id \gset business_
-
--- employees
-insert into employees (business_id, name, mobile, status) values
-  (:'business_id', 'Ramesh Kumar', '9000011111', 'active'),
-  (:'business_id', 'Suresh Babu', '9000022222', 'active'),
-  (:'business_id', 'Lakshmi Priya', '9000033333', 'active');
-
--- products
-insert into products (business_id, name, category, default_purchase_price, default_selling_price) values
-  (:'business_id', 'Asian Paints Tractor Emulsion 20L', 'Paints', 2200, 2650),
-  (:'business_id', 'TMT Steel Bar 12mm (Fe500)', 'Steel', 620, 690),
-  (:'business_id', 'UltraTech Cement 50kg', 'Cement', 335, 380),
-  (:'business_id', 'Vitrified Tile 2x2 ft (box)', 'Tiles', 850, 1050),
-  (:'business_id', 'CPVC Pipe 1 inch (3m)', 'Plumbing', 260, 320),
-  (:'business_id', 'Door Hinge Heavy Duty (pair)', 'Hardware', 90, 140);
-
--- a paid bill
-with b as (
-  insert into bills (business_id, bill_number, bill_date, customer_name, customer_mobile, grand_total, notes)
-  values (:'business_id', 'SV-1001', current_date, 'Venkata Rao', '9123456780', 0, 'Cash sale')
-  returning id
-)
-insert into bill_items (bill_id, product_name_snapshot, quantity, purchase_price, selling_price)
-select id, 'UltraTech Cement 50kg', 20, 335, 380 from b;
-
--- an expense
-insert into expenses (business_id, date, category, amount, description)
-values (:'business_id', current_date, 'Transport', 850, 'Local delivery auto charges');
+INSERT INTO expenses (business_id, date, category, amount, description)
+SELECT id, CURRENT_DATE, 'Transport', 850, 'Local delivery auto charges' FROM new_business;
