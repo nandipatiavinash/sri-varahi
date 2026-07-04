@@ -210,3 +210,149 @@ export async function getAnalyticsData(monthStr: string): Promise<ActionResult<A
     return { ok: false, error: error.message || 'Failed to fetch analytics data' };
   }
 }
+
+export interface ReportData {
+  bills: DayBillInfo[];
+  expenses: {
+    date: string;
+    category: string;
+    description: string | null;
+    amount: number;
+  }[];
+  productSales: {
+    name: string;
+    quantity: number;
+    revenue: number;
+  }[];
+  summary: {
+    totalRevenue: number;
+    totalProfit: number;
+    totalExpenses: number;
+    netProfit: number;
+    invoicesCount: number;
+  };
+}
+
+export async function getCustomRangeReport(
+  startDate: string,
+  endDate: string
+): Promise<ActionResult<ReportData>> {
+  try {
+    const supabase = await createClient();
+    const business = await getCurrentBusiness();
+
+    // 1. Fetch bills
+    const { data: bills, error: billsErr } = await supabase
+      .from('bills')
+      .select(`
+        id,
+        bill_number,
+        bill_date,
+        customer_name,
+        customer_mobile,
+        grand_total,
+        gross_profit,
+        paid_amount,
+        balance_due,
+        status,
+        employee_id,
+        employees (name)
+      `)
+      .eq('business_id', business.id)
+      .gte('bill_date', startDate)
+      .lte('bill_date', endDate)
+      .order('bill_date', { ascending: true });
+
+    if (billsErr) throw new Error(billsErr.message);
+
+    // 2. Fetch expenses
+    const { data: expenses, error: expErr } = await supabase
+      .from('expenses')
+      .select('date, category, description, amount')
+      .eq('business_id', business.id)
+      .gte('date', startDate)
+      .lte('date', endDate)
+      .order('date', { ascending: true });
+
+    if (expErr) throw new Error(expErr.message);
+
+    // 3. Fetch bill items
+    const { data: billItems, error: itemsErr } = await supabase
+      .from('bill_items')
+      .select('product_name_snapshot, quantity, selling_price, bills!inner(bill_date, status, business_id)')
+      .eq('bills.business_id', business.id)
+      .gte('bills.bill_date', startDate)
+      .lte('bills.bill_date', endDate)
+      .neq('bills.status', 'voided');
+
+    if (itemsErr) throw new Error(itemsErr.message);
+
+    // 4. Summaries calculation
+    const activeBills = (bills ?? []).filter((b) => b.status !== 'voided');
+    const totalRevenue = activeBills.reduce((s, b) => s + Number(b.grand_total), 0);
+    const totalProfit = activeBills.reduce((s, b) => s + Number(b.gross_profit), 0);
+    const invoicesCount = activeBills.length;
+
+    const totalExpenses = (expenses ?? []).reduce((s, e) => s + Number(e.amount), 0);
+    const netProfit = totalProfit - totalExpenses;
+
+    // 5. Product sales aggregation
+    const productsMap = new Map<string, { quantity: number; revenue: number }>();
+    (billItems ?? []).forEach((item) => {
+      const name = item.product_name_snapshot;
+      const qty = Number(item.quantity);
+      const rev = Number(item.selling_price) * qty;
+
+      const prev = productsMap.get(name) || { quantity: 0, revenue: 0 };
+      productsMap.set(name, {
+        quantity: prev.quantity + qty,
+        revenue: prev.revenue + rev,
+      });
+    });
+
+    const productSales = Array.from(productsMap.entries())
+      .map(([name, stats]) => ({
+        name,
+        quantity: stats.quantity,
+        revenue: stats.revenue,
+      }))
+      .sort((a, b) => b.revenue - a.revenue);
+
+    const formattedBills: DayBillInfo[] = (bills ?? []).map((b) => ({
+      id: b.id,
+      bill_number: b.bill_number,
+      bill_date: b.bill_date,
+      customer_name: b.customer_name,
+      customer_mobile: b.customer_mobile,
+      grand_total: Number(b.grand_total),
+      gross_profit: Number(b.gross_profit),
+      paid_amount: Number(b.paid_amount),
+      balance_due: Number(b.balance_due),
+      status: b.status,
+      employee_name: (b.employees as any)?.name || null,
+    }));
+
+    return {
+      ok: true,
+      data: {
+        bills: formattedBills,
+        expenses: (expenses ?? []).map((e) => ({
+          date: e.date,
+          category: e.category,
+          description: e.description,
+          amount: Number(e.amount),
+        })),
+        productSales,
+        summary: {
+          totalRevenue,
+          totalProfit,
+          totalExpenses,
+          netProfit,
+          invoicesCount,
+        },
+      },
+    };
+  } catch (error: any) {
+    return { ok: false, error: error.message || 'Failed to generate custom range report' };
+  }
+}

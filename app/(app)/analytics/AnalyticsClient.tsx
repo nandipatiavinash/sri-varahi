@@ -26,7 +26,7 @@ import * as XLSX from 'xlsx';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { formatCurrency, formatDate } from '@/lib/utils/format';
-import { getAnalyticsData, type AnalyticsData, type DayBillInfo } from '@/actions/analytics';
+import { getAnalyticsData, getCustomRangeReport, type AnalyticsData, type DayBillInfo } from '@/actions/analytics';
 
 export function AnalyticsClient() {
   const today = new Date();
@@ -37,6 +37,90 @@ export function AnalyticsClient() {
   
   // Selected date cell for details modal
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+
+  // Custom Range Report States
+  const [reportFrom, setReportFrom] = useState(today.toISOString().slice(0, 10));
+  const [reportTo, setReportTo] = useState(today.toISOString().slice(0, 10));
+  const [exporting, setExporting] = useState(false);
+
+  async function handleExportExcel() {
+    if (!reportFrom || !reportTo) {
+      toast.error('Please select both start and end dates');
+      return;
+    }
+    setExporting(true);
+    const res = await getCustomRangeReport(reportFrom, reportTo);
+    setExporting(false);
+
+    if (!res.ok) {
+      toast.error(res.error || 'Failed to export report data');
+      return;
+    }
+
+    const { bills, expenses, productSales, summary } = res.data;
+
+    try {
+      const wb = XLSX.utils.book_new();
+
+      // Sheet 1: Summary Stats
+      const summaryData = [
+        { Metric: 'Report Start Date', Value: formatDate(reportFrom) },
+        { Metric: 'Report End Date', Value: formatDate(reportTo) },
+        { Metric: 'Total Invoices Count', Value: summary.invoicesCount },
+        { Metric: 'Total Revenue (Sales)', Value: summary.totalRevenue },
+        { Metric: 'Gross Profit', Value: summary.totalProfit },
+        { Metric: 'Total Expenses', Value: summary.totalExpenses },
+        { Metric: 'Net Profit', Value: summary.netProfit },
+      ];
+      const wsSummary = XLSX.utils.json_to_sheet(summaryData);
+      XLSX.utils.book_append_sheet(wb, wsSummary, 'Financial Summary');
+
+      // Sheet 2: Invoices Log
+      const invoicesData = bills.map((b) => ({
+        'Invoice Number': b.bill_number,
+        'Date': b.bill_date,
+        'Customer Name': b.customer_name,
+        'Customer Mobile': b.customer_mobile || '—',
+        'Sales Executive (Staff)': b.employee_name || '—',
+        'Grand Total': b.grand_total,
+        'Gross Profit': b.gross_profit,
+        'Amount Paid': b.paid_amount,
+        'Balance Due': b.balance_due,
+        'Status': b.status,
+      }));
+      const wsInvoices = XLSX.utils.json_to_sheet(invoicesData);
+      XLSX.utils.book_append_sheet(wb, wsInvoices, 'Invoices');
+
+      // Sheet 3: Expenses Log
+      const expensesData = expenses.map((e) => ({
+        'Date': e.date,
+        'Category': e.category,
+        'Description': e.description || '—',
+        'Amount': e.amount,
+      }));
+      const wsExpenses = XLSX.utils.json_to_sheet(expensesData);
+      XLSX.utils.book_append_sheet(wb, wsExpenses, 'Expenses');
+
+      // Sheet 4: Product Sales Log
+      const productSalesData = productSales.map((p) => ({
+        'Product Name': p.name,
+        'Quantity Sold': p.quantity,
+        'Total Revenue': p.revenue,
+      }));
+      const wsProducts = XLSX.utils.json_to_sheet(productSalesData);
+      XLSX.utils.book_append_sheet(wb, wsProducts, 'Product Sales');
+
+      XLSX.writeFile(wb, `Business_Analytics_Report_${reportFrom}_to_${reportTo}.xlsx`);
+
+      window.dispatchEvent(
+        new CustomEvent('show-success-modal', {
+          detail: { message: 'Excel Report exported successfully!' },
+        })
+      );
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to generate Excel report');
+    }
+  }
 
   const monthStr = `${currentYear}-${currentMonth.toString().padStart(2, '0')}`;
 
@@ -349,6 +433,51 @@ export function AnalyticsClient() {
                   </button>
                 );
               })}
+            </div>
+          </div>
+
+          {/* Custom Date Range Export/Print card */}
+          <div className="card p-5 mt-6 no-print">
+            <h2 className="text-sm font-semibold text-ink-700 mb-1">Export Custom Date Range Report</h2>
+            <p className="text-xs text-ink-500 mb-4">Select a custom date range to download the Excel workbook or print/save the detailed PDF report.</p>
+            <div className="flex flex-wrap items-end gap-4">
+              <div>
+                <label className="label text-xs" htmlFor="report-from">Start Date</label>
+                <input
+                  id="report-from"
+                  type="date"
+                  className="input py-1.5 px-3 text-xs w-40"
+                  value={reportFrom}
+                  onChange={(e) => setReportFrom(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="label text-xs" htmlFor="report-to">End Date</label>
+                <input
+                  id="report-to"
+                  type="date"
+                  className="input py-1.5 px-3 text-xs w-40"
+                  value={reportTo}
+                  onChange={(e) => setReportTo(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-wrap gap-2.5">
+                <button
+                  type="button"
+                  disabled={exporting}
+                  onClick={handleExportExcel}
+                  className="btn bg-green-50 text-green-700 hover:bg-green-100 flex items-center gap-1.5 text-xs font-semibold py-1.5 px-4 rounded-lg disabled:opacity-50"
+                >
+                  <Download size={14} /> {exporting ? 'Exporting...' : 'Download Excel'}
+                </button>
+                <Link
+                  href={`/reports/print/analytics?from=${reportFrom}&to=${reportTo}`}
+                  target="_blank"
+                  className="btn-primary py-1.5 px-4 text-xs font-semibold rounded-lg inline-flex items-center gap-1.5"
+                >
+                  Print / Save PDF
+                </Link>
+              </div>
             </div>
           </div>
         </>
