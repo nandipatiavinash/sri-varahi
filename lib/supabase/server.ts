@@ -1,7 +1,18 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { cache } from 'react';
+import { redirect } from 'next/navigation';
 import type { Database } from '@/types/database.types';
+
+export function isRedirectError(error: any): boolean {
+  return (
+    error &&
+    typeof error === 'object' &&
+    'digest' in error &&
+    typeof error.digest === 'string' &&
+    error.digest.startsWith('NEXT_REDIRECT;')
+  );
+}
 
 // Server-side Supabase client for use in Server Components, Server Actions,
 // and Route Handlers. RLS (business_id -> owner_id = auth.uid()) is the real
@@ -43,7 +54,9 @@ export const getCurrentBusiness = cache(async () => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) throw new Error('Not authenticated');
+  if (!user) {
+    redirect('/login');
+  }
 
   const { data: business, error } = await supabase
     .from('businesses')
@@ -51,7 +64,9 @@ export const getCurrentBusiness = cache(async () => {
     .eq('owner_id', user.id)
     .single();
 
-  if (error || !business) throw new Error('No business found for this account');
+  if (error || !business) {
+    redirect('/login');
+  }
 
   return business;
 });

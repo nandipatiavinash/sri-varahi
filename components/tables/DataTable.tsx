@@ -46,7 +46,8 @@ export function DataTable<T>({
         <div className="relative max-w-xs">
           <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" />
           <input
-            className="input pl-8"
+            className="input"
+            style={{ paddingLeft: '2.5rem' }}
             placeholder={searchPlaceholder}
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}

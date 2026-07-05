@@ -1,12 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { type ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '@/components/tables/DataTable';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { formatCurrency, formatDate } from '@/lib/utils/format';
 import { checkBillEditWindow } from '@/lib/edit-window';
-import { Lock } from 'lucide-react';
+import { Lock, RefreshCw } from 'lucide-react';
 
 export interface BillRow {
   id: string;
@@ -28,6 +29,20 @@ export function SalesTable({
   timezone: string;
   editWindowHours: number;
 }) {
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
+  const filteredBills = bills.filter((b) => {
+    if (startDate && b.bill_date < startDate) return false;
+    if (endDate && b.bill_date > endDate) return false;
+    return true;
+  });
+
+  const clearFilters = () => {
+    setStartDate('');
+    setEndDate('');
+  };
+
   const columns: ColumnDef<BillRow>[] = [
     {
       accessorKey: 'bill_number',
@@ -82,11 +97,51 @@ export function SalesTable({
   ];
 
   return (
-    <DataTable
-      columns={columns}
-      data={bills}
-      searchPlaceholder="Search bill # or customer…"
-      emptyMessage="No bills yet. Create your first sale."
-    />
+    <div className="space-y-4">
+      {/* Date Filter Panel */}
+      <div className="no-print flex flex-wrap items-end gap-3 rounded-xl border border-ink-100 bg-white p-4 shadow-sm">
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-ink-500" htmlFor="from-date">From Date</label>
+          <input
+            id="from-date"
+            type="date"
+            className="input py-1 px-3 max-w-[180px]"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-ink-500" htmlFor="to-date">To Date</label>
+          <input
+            id="to-date"
+            type="date"
+            className="input py-1 px-3 max-w-[180px]"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+        </div>
+        {(startDate || endDate) && (
+          <button
+            onClick={clearFilters}
+            className="btn-secondary h-[38px] px-3.5 flex items-center gap-1.5"
+            title="Reset Filters"
+          >
+            <RefreshCw size={14} className="animate-spin-once" />
+            Reset
+          </button>
+        )}
+      </div>
+
+      <DataTable
+        columns={columns}
+        data={filteredBills}
+        searchPlaceholder="Search bill # or customer…"
+        emptyMessage={
+          startDate || endDate
+            ? "No bills found in this date range."
+            : "No bills yet. Create your first sale."
+        }
+      />
+    </div>
   );
 }

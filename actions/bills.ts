@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { createClient, getCurrentBusiness } from '@/lib/supabase/server';
+import { createClient, getCurrentBusiness, isRedirectError } from '@/lib/supabase/server';
 import { billSchema, type BillFormValues } from '@/lib/validations/bill';
 import {
   computeSubtotal,
@@ -169,6 +169,7 @@ export async function updateBill(
   try {
     ({ supabase, business } = await assertBillIsEditable(billId));
   } catch (e) {
+    if (isRedirectError(e)) throw e;
     return { ok: false, error: e instanceof Error ? e.message : 'Not editable' };
   }
 
@@ -240,6 +241,7 @@ export async function deleteBill(billId: string): Promise<ActionResult> {
   try {
     ({ supabase, business, bill } = await assertBillIsEditable(billId));
   } catch (e) {
+    if (isRedirectError(e)) throw e;
     return { ok: false, error: e instanceof Error ? e.message : 'Not deletable' };
   }
 

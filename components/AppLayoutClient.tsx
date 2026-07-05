@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Sidebar } from '@/components/Sidebar';
 import { Menu } from 'lucide-react';
 import { SuccessModal } from '@/components/ui/SuccessModal';
+import { createClient } from '@/lib/supabase/client';
 
 export function AppLayoutClient({
   businessName,
@@ -13,6 +14,21 @@ export function AppLayoutClient({
   children: React.ReactNode;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || (event === 'TOKEN_REFRESHED' && !session)) {
+        window.location.href = '/login';
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <div className="flex min-h-screen overflow-hidden">

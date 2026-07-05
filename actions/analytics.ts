@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient, getCurrentBusiness } from '@/lib/supabase/server';
+import { createClient, getCurrentBusiness, isRedirectError } from '@/lib/supabase/server';
 import type { ActionResult } from './bills';
 
 export interface DayBillInfo {
@@ -207,6 +207,7 @@ export async function getAnalyticsData(monthStr: string): Promise<ActionResult<A
       },
     };
   } catch (error: any) {
+    if (isRedirectError(error)) throw error;
     return { ok: false, error: error.message || 'Failed to fetch analytics data' };
   }
 }
@@ -353,6 +354,7 @@ export async function getCustomRangeReport(
       },
     };
   } catch (error: any) {
+    if (isRedirectError(error)) throw error;
     return { ok: false, error: error.message || 'Failed to generate custom range report' };
   }
 }

@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient, getCurrentBusiness } from '@/lib/supabase/server';
+import { createClient, getCurrentBusiness, isRedirectError } from '@/lib/supabase/server';
 import type { ActionResult } from './bills';
 
 export interface ExportData {
@@ -101,6 +101,7 @@ export async function getExportData(
       },
     };
   } catch (error: any) {
+    if (isRedirectError(error)) throw error;
     return { ok: false, error: error.message || 'Failed to fetch export data' };
   }
 }

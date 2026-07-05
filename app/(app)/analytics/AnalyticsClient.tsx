@@ -243,7 +243,7 @@ export function AnalyticsClient() {
       ) : (
         <>
           {/* KPI Metrics Cards */}
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
             <div className="card p-5">
               <span className="text-xs font-semibold text-ink-500 uppercase tracking-wider">Daily Revenue</span>
               <p className="mt-1.5 text-2xl font-bold text-ink-900">{formatCurrency(todayRevenue)}</p>
@@ -260,11 +260,28 @@ export function AnalyticsClient() {
               <span className="mt-1 block text-xs text-ink-500 font-medium bg-ink-50 py-0.5 px-2 rounded w-fit">Current month</span>
             </div>
             <div className="card p-5">
+              <span className="text-xs font-semibold text-ink-500 uppercase tracking-wider">Gross Profit</span>
+              <p className="mt-1.5 text-2xl font-bold text-ink-900">{formatCurrency(data.monthlyProfit)}</p>
+              <span className="mt-1 block text-xs text-emerald-600 font-medium bg-emerald-50 py-0.5 px-2 rounded w-fit">Current month</span>
+            </div>
+            <div className="card p-5">
+              <span className="text-xs font-semibold text-ink-500 uppercase tracking-wider">Total Expenses</span>
+              <p className="mt-1.5 text-2xl font-bold text-ink-900">{formatCurrency(data.monthlyExpenses)}</p>
+              <span className="mt-1 block text-xs text-red-600 font-medium bg-red-50 py-0.5 px-2 rounded w-fit">Current month</span>
+            </div>
+            <div className="card p-5">
+              <span className="text-xs font-semibold text-ink-500 uppercase tracking-wider">Net Profit</span>
+              <p className="mt-1.5 text-2xl font-bold text-ink-900">{formatCurrency(data.monthlyNetProfit)}</p>
+              <span className="mt-1 block text-xs text-sky-600 font-medium bg-sky-50 py-0.5 px-2 rounded w-fit">Current month</span>
+            </div>
+            <div className="card p-5 col-span-2 lg:col-span-3">
               <span className="text-xs font-semibold text-ink-500 uppercase tracking-wider">Average Bill</span>
-              <p className="mt-1.5 text-2xl font-bold text-ink-900">{formatCurrency(data.averageBill)}</p>
-              <span className="mt-1 block text-xs text-ink-500 font-medium bg-ink-50 py-0.5 px-2 rounded w-fit">
-                {data.totalInvoicesCount} invoices
-              </span>
+              <div className="flex items-baseline gap-2 mt-1.5">
+                <p className="text-2xl font-bold text-ink-900">{formatCurrency(data.averageBill)}</p>
+                <span className="text-xs text-ink-500 font-medium">
+                  across {data.totalInvoicesCount} invoices
+                </span>
+              </div>
             </div>
           </div>
 
