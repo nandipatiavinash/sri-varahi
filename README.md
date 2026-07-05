@@ -1,4 +1,4 @@
-# Sri Varahi Building Solutions — Sales & Profit Management System
+# Sree Vaaraahi Building Solutions — Sales & Profit Management System
 
 A single-owner sales, billing, and profit management system built with Next.js 15 (App
 Router), Supabase (Postgres + Auth + RLS), TanStack Query/Table, React Hook Form + Zod,

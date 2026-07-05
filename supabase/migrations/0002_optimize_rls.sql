@@ -1,5 +1,5 @@
 -- =========================================================================
--- Sri Varahi Building Solutions — RLS Performance Optimization
+-- Sree Vaaraahi Building Solutions — RLS Performance Optimization
 -- Migration 0002: helper functions and optimized RLS policies
 -- =========================================================================
 

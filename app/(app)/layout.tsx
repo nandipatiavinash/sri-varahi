@@ -17,7 +17,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     .eq('owner_id', user.id)
     .single();
 
-  const businessName = business?.name ?? 'Sri Varahi Building Solutions';
+  const businessName = business?.name ?? 'Sree Vaaraahi Building Solutions';
 
   return (
     <AppLayoutClient businessName={businessName}>

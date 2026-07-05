@@ -1,5 +1,5 @@
 -- =========================================================================
--- Sri Varahi Building Solutions — Sales & Profit Management System
+-- Sree Vaaraahi Building Solutions — Sales & Profit Management System
 -- Migration 0001: core schema, RLS, triggers, dashboard views
 -- =========================================================================
 
@@ -11,7 +11,7 @@ create extension if not exists "pgcrypto";
 create table businesses (
   id           uuid primary key default gen_random_uuid(),
   owner_id     uuid not null unique references auth.users(id) on delete cascade,
-  name         text not null default 'Sri Varahi Building Solutions',
+  name         text not null default 'Sree Vaaraahi Building Solutions',
   logo_url     text,
   address      text,
   phone        text,

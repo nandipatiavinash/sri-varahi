@@ -63,7 +63,7 @@ export function ExcelExporter() {
       XLSX.utils.book_append_sheet(wb, wsStaff, 'Staff Sales');
 
       // Trigger download
-      XLSX.writeFile(wb, `sri_varahi_data_${from}_to_${to}.xlsx`);
+      XLSX.writeFile(wb, `sree_vaaraahi_data_${from}_to_${to}.xlsx`);
       triggerSuccessModal('Excel Export Complete! Check your downloads folder.');
     } catch (error: any) {
       setDownloading(false);

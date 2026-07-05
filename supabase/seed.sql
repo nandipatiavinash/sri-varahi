@@ -5,10 +5,10 @@ WITH new_business AS (
   INSERT INTO businesses (owner_id, name, address, phone, email, currency)
   VALUES (
     'a112a7b5-ddd5-4b09-83e3-7fae479cf110',
-    'Sri Varahi Building Solutions',
+    'Sree Vaaraahi Building Solutions',
     'Main Road, Andhra Pradesh',
     '9876543210',
-    'contact@srivarahi.example',
+    'contact@sreevaaraahi.example',
     'INR'
   )
   RETURNING id

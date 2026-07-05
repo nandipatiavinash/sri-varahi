@@ -6,8 +6,13 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'Sri Varahi Building Solutions — Sales & Profit',
-  description: 'Sales, billing, and profit management for Sri Varahi Building Solutions',
+  title: 'Sree Vaaraahi Building Solutions — Sales & Profit',
+  description: 'Sales, billing, and profit management for Sree Vaaraahi Building Solutions',
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
